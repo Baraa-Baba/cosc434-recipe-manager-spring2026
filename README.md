@@ -51,19 +51,22 @@ Extended the Recipe App with a RESTful JSON API and asynchronous frontend intera
 ### Implementation Summary
 
 **API Controller:**
+
 - Created `App\Http\Controllers\API\RecipeController` with `--api` flag
 - Implemented 5 RESTful methods:
-  - `index()` - Returns all recipes with relationships (category, tags)
-  - `show($recipe)` - Returns single recipe with relationships
-  - `store(Request $request)` - Creates recipe with validation (returns 201)
-  - `update(Request $request, Recipe $recipe)` - Updates recipe and syncs tags
-  - `destroy(Recipe $recipe)` - Deletes recipe
+    - `index()` - Returns all recipes with relationships (category, tags)
+    - `show($recipe)` - Returns single recipe with relationships
+    - `store(Request $request)` - Creates recipe with validation (returns 201)
+    - `update(Request $request, Recipe $recipe)` - Updates recipe and syncs tags
+    - `destroy(Recipe $recipe)` - Deletes recipe
 
 **API Routes:**
+
 - Registered via `Route::apiResource('recipes', RecipeController::class)` in `routes/api.php`
 - 5 endpoints: `GET/POST /api/recipes` and `GET/PUT/DELETE /api/recipes/{id}`
 
 **Async Demo Page:**
+
 - Located at `/recipes-api-demo`
 - Form to create recipes without page reload
 - Real-time recipe list that updates dynamically
@@ -72,6 +75,7 @@ Extended the Recipe App with a RESTful JSON API and asynchronous frontend intera
 - Success/error flash messages
 
 **JavaScript Features:**
+
 - `loadRecipes()` - Fetches and displays all recipes
 - Form submission handler - POSTs new recipe data
 - `deleteRecipe()` - Deletes recipe via DELETE request
@@ -86,13 +90,13 @@ Extended the Recipe App with a RESTful JSON API and asynchronous frontend intera
 
 ### API Endpoints
 
-| Method | Endpoint | Purpose | Response |
-|--------|----------|---------|----------|
-| GET | `/api/recipes` | List all recipes | 200 with array of recipes |
-| POST | `/api/recipes` | Create new recipe | 201 with created recipe |
-| GET | `/api/recipes/{id}` | Get single recipe | 200 with recipe object |
-| PUT | `/api/recipes/{id}` | Update recipe | 200 with updated recipe |
-| DELETE | `/api/recipes/{id}` | Delete recipe | 200 with success message |
+| Method | Endpoint            | Purpose           | Response                  |
+| ------ | ------------------- | ----------------- | ------------------------- |
+| GET    | `/api/recipes`      | List all recipes  | 200 with array of recipes |
+| POST   | `/api/recipes`      | Create new recipe | 201 with created recipe   |
+| GET    | `/api/recipes/{id}` | Get single recipe | 200 with recipe object    |
+| PUT    | `/api/recipes/{id}` | Update recipe     | 200 with updated recipe   |
+| DELETE | `/api/recipes/{id}` | Delete recipe     | 200 with success message  |
 
 ### Testing Results
 
@@ -152,18 +156,22 @@ php artisan serve
 ### Web Interface
 
 **Recipe Listing:**
+
 - Visit `http://127.0.0.1:8000/recipes`
 - Public page showing all recipes
 
 **Demo Login:**
+
 - Click "Demo Login" button in header
 - Enables recipe management features
 
 **Create/Edit/Delete Recipes:**
+
 - Traditional form-based CRUD operations
 - Protected by middleware
 
 **API Demo Page:**
+
 - Visit `http://127.0.0.1:8000/recipes-api-demo`
 - Interactive async recipe management
 - Real-time updates without page reload
@@ -171,10 +179,12 @@ php artisan serve
 ### Testing with Postman
 
 **Setup:**
+
 1. Open Postman
 2. Create requests with the following base URL: `http://127.0.0.1:8000/api`
 
 **Example: Create Recipe (POST)**
+
 ```
 POST /api/recipes
 Headers:
@@ -228,6 +238,7 @@ resources/views/recipes/
 Through implementing Labs 6 and 8, you have learned:
 
 **Lab 6 - Middleware:**
+
 - ✅ Create custom middleware classes
 - ✅ Register middleware aliases
 - ✅ Apply middleware to routes and groups
@@ -235,6 +246,7 @@ Through implementing Labs 6 and 8, you have learned:
 - ✅ Use session for simple authentication
 
 **Lab 8 - API & Async:**
+
 - ✅ Design RESTful API endpoints
 - ✅ Return JSON instead of HTML
 - ✅ Eager load relationships in APIs
@@ -250,12 +262,14 @@ Through implementing Labs 6 and 8, you have learned:
 ## Troubleshooting
 
 ### Routes Not Showing
+
 ```bash
 # Clear route cache
 php artisan route:clear
 ```
 
 ### API Endpoints Returning 404
+
 ```bash
 # Clear configuration cache
 php artisan config:clear
@@ -265,7 +279,9 @@ php artisan serve
 ```
 
 ### Form Validation Issues
+
 Check that:
+
 - Category exists in database
 - Tags exist in database
 - All required fields are provided
