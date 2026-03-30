@@ -9,17 +9,16 @@ use Symfony\Component\HttpFoundation\Response;
 class EnsureUserIsLoggedIn
 {
     /**
-     * Handle an incoming request.
-     *
-     * Check whether the session indicates a logged-in state.
-     * If not logged in, redirect to the recipes index with an error message.
-     * If logged in, allow the request to continue.
+     * Verify that the current visitor has an active demo session.
+     * Deny entry and bounce back if no valid session flag exists.
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!$request->session()->get('logged_in')) {
-            return redirect()->route('recipes.index')
-                ->with('error', 'Access denied. Please log in first.');
+        $isAuthenticated = $request->session()->has('logged_in');
+
+        if (! $isAuthenticated) {
+            return redirect('/')
+                ->with('error', 'You must be logged in to perform this action.');
         }
 
         return $next($request);

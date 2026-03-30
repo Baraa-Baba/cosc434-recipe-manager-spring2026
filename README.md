@@ -1,58 +1,276 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# COSC 434 – Advanced Web Programming | Recipe Manager Application
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**Name:** Baraa Baba  
+**Course:** COSC 434 – Advanced Web Programming  
+**Semester:** Spring 2026
 
-## About Laravel
+## Project Overview
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+This is a comprehensive Laravel Recipe Management Application demonstrating modern web development practices including middleware, RESTful APIs, and asynchronous frontend interactions.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Lab Session 6: Protecting Routes with Middleware ✅
 
-## Learning Laravel
+### Overview
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+Implemented route protection through custom middleware to separate public recipe viewing from authenticated management operations.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Implementation Summary
 
-## Laravel Sponsors
+- **Custom Middleware:** Created `app/Http/Middleware/EnsureUserIsLoggedIn.php` to check session state
+- **Demo Authentication:** Implemented `/login-demo` and `/logout-demo` routes that toggle session flag `logged_in`
+- **Route Protection:** Applied `demo.auth` middleware to create, edit, update, and delete operations
+- **Public Access:** Index and show routes remain open to all visitors
+- **User Feedback:** Flash messages for login/logout success and access denied scenarios
+- **UI Integration:** Demo login/logout controls in header, conditional visibility of management links
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Key Files
 
-### Premium Partners
+- `app/Http/Middleware/EnsureUserIsLoggedIn.php`
+- `bootstrap/app.php` (middleware alias registration)
+- `routes/web.php` (protected route group)
+- `resources/views/layouts/app.blade.php`
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Testing Results
 
-## Contributing
+- ✅ Public recipe list accessible without authentication
+- ✅ Management routes blocked for guests (redirect to home)
+- ✅ Management routes accessible after demo login
+- ✅ Routes blocked again after demo logout
+- ✅ Flash messages display correctly
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## Lab Session 8: Building API Endpoints & Async Interaction ✅
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Overview
 
-## Security Vulnerabilities
+Extended the Recipe App with a RESTful JSON API and asynchronous frontend interactions, allowing real-time recipe management without page reloads.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Implementation Summary
+
+**API Controller:**
+- Created `App\Http\Controllers\API\RecipeController` with `--api` flag
+- Implemented 5 RESTful methods:
+  - `index()` - Returns all recipes with relationships (category, tags)
+  - `show($recipe)` - Returns single recipe with relationships
+  - `store(Request $request)` - Creates recipe with validation (returns 201)
+  - `update(Request $request, Recipe $recipe)` - Updates recipe and syncs tags
+  - `destroy(Recipe $recipe)` - Deletes recipe
+
+**API Routes:**
+- Registered via `Route::apiResource('recipes', RecipeController::class)` in `routes/api.php`
+- 5 endpoints: `GET/POST /api/recipes` and `GET/PUT/DELETE /api/recipes/{id}`
+
+**Async Demo Page:**
+- Located at `/recipes-api-demo`
+- Form to create recipes without page reload
+- Real-time recipe list that updates dynamically
+- Delete functionality with confirmation dialog
+- Validation error display
+- Success/error flash messages
+
+**JavaScript Features:**
+- `loadRecipes()` - Fetches and displays all recipes
+- Form submission handler - POSTs new recipe data
+- `deleteRecipe()` - Deletes recipe via DELETE request
+- CSRF token handling for state-changing operations
+- XSS protection via HTML escaping
+
+### Key Files
+
+- `app/Http/Controllers/API/RecipeController.php`
+- `routes/api.php`
+- `resources/views/recipes/api-demo.blade.php`
+
+### API Endpoints
+
+| Method | Endpoint | Purpose | Response |
+|--------|----------|---------|----------|
+| GET | `/api/recipes` | List all recipes | 200 with array of recipes |
+| POST | `/api/recipes` | Create new recipe | 201 with created recipe |
+| GET | `/api/recipes/{id}` | Get single recipe | 200 with recipe object |
+| PUT | `/api/recipes/{id}` | Update recipe | 200 with updated recipe |
+| DELETE | `/api/recipes/{id}` | Delete recipe | 200 with success message |
+
+### Testing Results
+
+- ✅ API returns all recipes with category and tags
+- ✅ Single recipe endpoint works correctly
+- ✅ Create recipe via POST with validation
+- ✅ Update recipe via PUT with tag syncing
+- ✅ Delete recipe via DELETE
+- ✅ Async demo page loads recipes on page load
+- ✅ Can create recipe from form without page reload
+- ✅ Can delete recipe from UI without page reload
+- ✅ Validation errors display properly
+- ✅ Success messages appear after operations
+
+---
+
+## Features
+
+- ✅ Full CRUD operations for recipes
+- ✅ Category assignment (one per recipe)
+- ✅ Multiple tags per recipe (many-to-many relationship)
+- ✅ Middleware-protected management routes
+- ✅ Demo login/logout system
+- ✅ RESTful JSON API endpoints
+- ✅ Asynchronous recipe management
+- ✅ Server-side validation with error responses
+- ✅ Responsive Bootstrap UI
+- ✅ CSRF protection on all state-changing operations
+
+---
+
+## Installation & Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/your-username/cosc434-recipe-manager-spring2026.git
+cd cosc434-recipe-manager-spring2026
+
+# Install dependencies
+composer install
+
+# Setup environment
+cp .env.example .env
+php artisan key:generate
+
+# Configure database in .env
+php artisan migrate
+
+# Start development server
+php artisan serve
+```
+
+---
+
+## Using the Application
+
+### Web Interface
+
+**Recipe Listing:**
+- Visit `http://127.0.0.1:8000/recipes`
+- Public page showing all recipes
+
+**Demo Login:**
+- Click "Demo Login" button in header
+- Enables recipe management features
+
+**Create/Edit/Delete Recipes:**
+- Traditional form-based CRUD operations
+- Protected by middleware
+
+**API Demo Page:**
+- Visit `http://127.0.0.1:8000/recipes-api-demo`
+- Interactive async recipe management
+- Real-time updates without page reload
+
+### Testing with Postman
+
+**Setup:**
+1. Open Postman
+2. Create requests with the following base URL: `http://127.0.0.1:8000/api`
+
+**Example: Create Recipe (POST)**
+```
+POST /api/recipes
+Headers:
+  Content-Type: application/json
+  X-CSRF-TOKEN: <token from page>
+Body:
+{
+  "name": "Pasta",
+  "description": "Delicious pasta",
+  "ingredients": "Pasta, sauce, cheese",
+  "instructions": "Boil and serve",
+  "category_id": 1,
+  "tags": [1, 2]
+}
+```
+
+---
+
+## Project Structure
+
+```
+app/
+├── Http/
+│   ├── Controllers/
+│   │   ├── API/
+│   │   │   └── RecipeController.php (API endpoints)
+│   │   └── RecipeController.php (Web CRUD)
+│   └── Middleware/
+│       └── EnsureUserIsLoggedIn.php
+├── Models/
+│   ├── Recipe.php
+│   ├── Category.php
+│   └── Tag.php
+│
+routes/
+├── api.php (API routes with apiResource)
+└── web.php (Web routes with middleware groups)
+
+resources/views/recipes/
+├── index.blade.php
+├── show.blade.php
+├── create.blade.php
+├── edit.blade.php
+└── api-demo.blade.php (Async demo page)
+```
+
+---
+
+## Learning Outcomes
+
+Through implementing Labs 6 and 8, you have learned:
+
+**Lab 6 - Middleware:**
+- ✅ Create custom middleware classes
+- ✅ Register middleware aliases
+- ✅ Apply middleware to routes and groups
+- ✅ Redirect unauthorized requests
+- ✅ Use session for simple authentication
+
+**Lab 8 - API & Async:**
+- ✅ Design RESTful API endpoints
+- ✅ Return JSON instead of HTML
+- ✅ Eager load relationships in APIs
+- ✅ Validate input in API endpoints
+- ✅ Use fetch() for asynchronous requests
+- ✅ Handle CSRF tokens in AJAX
+- ✅ Update DOM dynamically
+- ✅ Display validation errors
+- ✅ Prevent XSS attacks
+
+---
+
+## Troubleshooting
+
+### Routes Not Showing
+```bash
+# Clear route cache
+php artisan route:clear
+```
+
+### API Endpoints Returning 404
+```bash
+# Clear configuration cache
+php artisan config:clear
+
+# Restart the development server
+php artisan serve
+```
+
+### Form Validation Issues
+Check that:
+- Category exists in database
+- Tags exist in database
+- All required fields are provided
+
+---
 
 ## License
 

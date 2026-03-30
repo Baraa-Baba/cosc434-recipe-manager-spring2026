@@ -5,103 +5,90 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Recipe Manager')</title>
     <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 25px;
+            background: #eef1f5;
+            color: #222;
         }
-        nav {
-            margin-bottom: 15px;
-            padding: 10px 0;
-            border-bottom: 1px solid #ddd;
+        h2 { margin-bottom: 10px; }
+        .navbar {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding: 12px 0;
+            border-bottom: 2px solid #ccc;
+            margin-bottom: 18px;
         }
-        nav a {
-            margin-right: 15px;
+        .navbar a {
             text-decoration: none;
-            color: #333;
+            color: #444;
+            font-weight: 500;
         }
-        nav a:hover {
-            text-decoration: underline;
+        .navbar a:hover { color: #000; }
+        .spacer { flex: 1; }
+        .badge {
+            font-size: 13px;
+            color: #0a7a2e;
+            font-weight: bold;
         }
-        .auth-links {
-            float: right;
-        }
-        .auth-links a {
-            padding: 6px 14px;
-            border-radius: 4px;
+        .btn {
+            display: inline-block;
+            padding: 7px 16px;
+            border-radius: 5px;
             text-decoration: none;
-            font-size: 14px;
-            margin-left: 8px;
+            font-size: 13px;
+            font-weight: 600;
         }
-        .btn-login {
-            background-color: #28a745;
-            color: white;
+        .btn-green { background: #2d9e52; color: #fff; }
+        .btn-green:hover { background: #24844a; color: #fff; }
+        .btn-red { background: #c9302c; color: #fff; }
+        .btn-red:hover { background: #a82824; color: #fff; }
+        .msg {
+            padding: 12px 18px;
+            border-radius: 5px;
+            margin-bottom: 16px;
+            font-size: 15px;
         }
-        .btn-login:hover {
-            background-color: #218838;
-            color: white;
+        .msg-ok {
+            background: #dff0d8;
+            color: #3c763d;
+            border: 1px solid #b2dba1;
         }
-        .btn-logout {
-            background-color: #dc3545;
-            color: white;
-        }
-        .btn-logout:hover {
-            background-color: #c82333;
-            color: white;
-        }
-        .alert {
-            padding: 10px 15px;
-            margin-bottom: 15px;
-            border-radius: 4px;
-        }
-        .alert-success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .alert-error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        .clearfix::after {
-            content: "";
-            display: table;
-            clear: both;
+        .msg-fail {
+            background: #fce4e4;
+            color: #8a1f11;
+            border: 1px solid #f5c2c2;
         }
     </style>
 </head>
 <body>
-    <h2>Recipe Manager</h2>
+    <h2>🍴 Recipe Manager</h2>
 
-    <nav class="clearfix">
-        <a href="{{ route('recipes.index') }}">All Recipes</a>
+    <div class="navbar">
+        <a href="{{ route('recipes.index') }}">📋 Browse Recipes</a>
 
         @if(session('logged_in'))
-            <a href="{{ route('recipes.create') }}">Create Recipe</a>
+            <a href="{{ route('recipes.create') }}">➕ New Recipe</a>
         @endif
 
-        <span class="auth-links">
-            @if(session('logged_in'))
-                <span style="color: green; margin-right: 10px;">✔ Logged In</span>
-                <a href="/logout-demo" class="btn-logout">Demo Logout</a>
-            @else
-                <a href="/login-demo" class="btn-login">Demo Login</a>
-            @endif
-        </span>
-    </nav>
+        <div class="spacer"></div>
 
-    {{-- Flash Messages --}}
+        @if(session('logged_in'))
+            <span class="badge">● Active Session</span>
+            <a href="/logout-demo" class="btn btn-red">End Demo</a>
+        @else
+            <a href="/login-demo" class="btn btn-green">Start Demo</a>
+        @endif
+    </div>
+
     @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
+        <div class="msg msg-ok">{{ session('success') }}</div>
     @endif
 
     @if(session('error'))
-        <div class="alert alert-error">
-            {{ session('error') }}
-        </div>
+        <div class="msg msg-fail">{{ session('error') }}</div>
     @endif
 
     @yield('content')

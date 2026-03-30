@@ -1,31 +1,32 @@
 @extends('layouts.app')
 
-@section('title','All Recipes')
+@section('title', 'Recipes')
 
 @section('content')
-<h3>All Recipes</h3>
-@if ($recipes->isEmpty())
-<p>No recipes yet.
-    @if(session('logged_in'))
-        <a href="{{ route('recipes.create') }}">Add</a>
-    @endif
-</p>
+<h3>📋 Recipe List</h3>
+
+@if ($recipes->count() === 0)
+    <p>Nothing here yet!
+        @if(session('logged_in'))
+            <a href="{{ route('recipes.create') }}">Create your first recipe</a>
+        @endif
+    </p>
 @else
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach ($recipes as $recipe )
-        <tr>
-            <td>{{ $recipe->name }}</td>
-            <td><a href="{{ route('recipes.show', $recipe) }}">View</a></td>
-        </tr>
-        @endforeach
-    </tbody>
-</table>
+    <table>
+        <thead>
+            <tr>
+                <th>Recipe Name</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($recipes as $item)
+            <tr>
+                <td>{{ $item->name }}</td>
+                <td><a href="{{ route('recipes.show', $item) }}">Details</a></td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
 @endif
 @endsection
